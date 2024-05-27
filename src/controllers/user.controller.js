@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
 
 
-const generateAccessAndRefereshTokens = async(userId) =>{
+const generateAccessAndRefereshTokens = async(userId) => {
     try {
         const user = await User.findById(userId)
         const accessToken = user.generateAccessToken()
@@ -244,7 +244,7 @@ const changeCurrentPassword = asyncHandler(async(req, res) => {
     }
 
     user.password = newPassword
-    await user.save({validateBeforeSave: false})
+    await user.save({validateBeforeSave: false})        // Save the user instance in database, disabling validation before save (e.g., skipping certain validations)
 
     return res
     .status(200)
@@ -277,7 +277,7 @@ const updateAccountDetails = asyncHandler(async(req, res) => {
                 email: email
             }
         },
-        {new: true}
+        {new: true}                 // return the updated document rather than the original document before the update. 
         
     ).select("-password")
 
@@ -309,7 +309,7 @@ const updateUserAvatar = asyncHandler(async(req, res) => {
                 avatar: avatar.url
             }
         },
-        {new: true}
+        {new: true}                     // return the updated document rather than the original document before the update. 
     ).select("-password")
 
     return res
@@ -343,7 +343,7 @@ const updateUserCoverImage = asyncHandler(async(req, res) => {
                 coverImage: coverImage.url
             }
         },
-        {new: true}
+        {new: true}                          // return the updated document rather than the original document before the update. 
     ).select("-password")
 
     return res
@@ -355,7 +355,7 @@ const updateUserCoverImage = asyncHandler(async(req, res) => {
 
 
 const getUserChannelProfile = asyncHandler(async(req, res) => {
-    const {username} = req.params
+    const {username} = req.params           // const username = req.params.username
 
     if (!username?.trim()) {
         throw new ApiError(400, "username is missing")
