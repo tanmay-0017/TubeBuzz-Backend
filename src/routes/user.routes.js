@@ -1,4 +1,4 @@
-import { Router } from "express";
+import express from 'express';
 import { 
     loginUser, 
     logoutUser, 
@@ -11,14 +11,14 @@ import {
     getUserChannelProfile, 
     getWatchHistory, 
     updateAccountDetails
-} from "../controllers/user.controller.js";
-import {upload} from "../middlewares/multer.middleware.js"
-import { verifyJWT } from "../middlewares/auth.middleware.js";
+} from './controllers/user.controller.js';
+import { upload } from './middlewares/multer.middleware.js';
+import { verifyJWT } from './middlewares/auth.middleware.js';
 
+const app = express();
 
-const router = Router()
-
-router.route("/register").post(
+// Routes
+app.route("/register").post(
     upload.fields([
         {
             name: "avatar",
@@ -30,21 +30,21 @@ router.route("/register").post(
         }
     ]),
     registerUser
-    )
+);
 
-router.route("/login").post(loginUser)
+app.route("/login").post(loginUser);
 
-//secured routes
-router.route("/logout").post(verifyJWT,  logoutUser)
-router.route("/refresh-token").post(refreshAccessToken)
-router.route("/change-password").post(verifyJWT, changeCurrentPassword)
-router.route("/current-user").get(verifyJWT, getCurrentUser)
-router.route("/update-account").patch(verifyJWT, updateAccountDetails)
+// Secured routes
+app.route("/logout").post(verifyJWT, logoutUser);
+app.route("/refresh-token").post(refreshAccessToken);
+app.route("/change-password").post(verifyJWT, changeCurrentPassword);
+app.route("/current-user").get(verifyJWT, getCurrentUser);
+app.route("/update-account").patch(verifyJWT, updateAccountDetails);
 
-router.route("/avatar").patch(verifyJWT, upload.single("avatar"), updateUserAvatar)
-router.route("/cover-image").patch(verifyJWT, upload.single("coverImage"), updateUserCoverImage)
+app.route("/avatar").patch(verifyJWT, upload.single("avatar"), updateUserAvatar);
+app.route("/cover-image").patch(verifyJWT, upload.single("coverImage"), updateUserCoverImage);
 
-router.route("/c/:username").get(verifyJWT, getUserChannelProfile)
-router.route("/history").get(verifyJWT, getWatchHistory)
+app.route("/c/:username").get(verifyJWT, getUserChannelProfile);
+app.route("/history").get(verifyJWT, getWatchHistory);
 
-export default router
+export default app;
